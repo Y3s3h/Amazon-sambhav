@@ -1,9 +1,10 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #65758258;
   }
   
   header {
-    background-color: #4CAF50;
+    background-color: #CCCCFF;
     color: white;
     padding: 10px 20px;
   }
@@ -17,3 +18,58 @@ body {
     text-align: center;
     padding: 10px;
   }
+  /* Example custom styling for navbar */
+.navbar {
+  padding: 15px;
+}
+
+.nav-link {
+  font-weight: bold;
+  color: #121213 !important; /* Custom link color */
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #0056b3 !important; /* Color change on hover */
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Optional: Custom navbar background color */
+.navbar-light {
+  background-color: #f8f9fa !important;
+}
+.navbar-nav {
+  list-style-type: none;
+  padding-left: 0; /* Remove any left padding */
+  display: flex;
+  justify-content: space-around; /* Use space-between instead of space-evenly for less space */
+  align-items: center;
+  flex-direction: row;
+  width: 60%; /* Ensure the navbar stretches across the full width */
+}
+h1{
+  color: #121213;
+}
+
+/* Make sure your body and html take the full height of the screen */
+body, html {
+  height: 100%; /* Full height */
+  margin: 0; /* Remove default margin */
+}
+
+/* The main container that holds everything */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; /* Ensures it takes up at least the full height of the screen */
+}
+
+/* Content area which will grow to take the remaining space */
+.main-content {
+  flex-grow: 1; /* This allows the content to grow and push the footer down */
+}

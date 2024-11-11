@@ -63,3 +63,62 @@ exports.getOrders = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
+
+// src/backend/controllers/orderController.js
+const { createFulfillmentOrder } = require("../services/mcfService");
+
+// Function to create a fulfillment order
+exports.createFulfillmentOrder = async (req, res) => {
+  const orderData = req.body; // Get order data from request body
+
+  try {
+    const result = await createFulfillmentOrder(orderData);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create fulfillment order" });
+  }
+};
+
+const {
+  createFulfillmentOrder,
+  getInventorySummary,
+} = require("../services/mcfService");
+const axios = require("axios");
+
+// Function to track an order
+exports.trackOrder = async (req, res) => {
+  const { orderId } = req.params; // Get order ID from request parameters
+
+  try {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(
+      "https://mws.amazonservices.com/FulfillmentOutbound/2018-06-01/GetFulfillmentOrder",
+      {
+        headers: {
+          Authorization: Bearer`${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          FulfillmentOrderId: orderId,
+        },
+      }
+    );
+
+    // Extract relevant information from the response
+    const trackingInfo = {
+      status: response.data.FulfillmentOrderStatus,
+      expectedDeliveryDate: response.data.ExpectedDeliveryDate,
+      shippingAddress: response.data.DestinationAddress,
+      trackingDetails: response.data.FulfillmentOrderItems.map((item) => ({
+        sku: item.SellerSKU,
+        quantity: item.Quantity,
+        itemStatus: item.FulfillmentOrderItemStatus,
+      })),
+    };
+
+    res.status(200).json(trackingInfo);
+  } catch (error) {
+    console.error("Error tracking order:", error);
+    res.status(500).json({ error: "Failed to track order" });
+  }
+};
